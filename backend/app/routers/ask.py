@@ -1,4 +1,4 @@
-"""Router: POST /ask -- answer a question grounded in indexed documents."""
+
 
 from __future__ import annotations
 
@@ -26,12 +26,7 @@ router = APIRouter(tags=["ask"])
     summary="Ask a question grounded in the uploaded documents",
 )
 async def ask_question(request: AskRequest):
-    """Run retrieval + reranking + LLM generation for a user question.
-
-    If `stream=True`, returns a Server-Sent-Events stream of answer tokens
-    followed by a final event containing citations and confidence.
-    Otherwise, returns a single structured JSON response.
-    """
+   
     chunks = retrieve(
         question=request.question,
         document_ids=request.document_ids,
