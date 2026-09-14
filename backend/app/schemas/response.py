@@ -1,5 +1,3 @@
-"""Pydantic response models for the DocMind API."""
-
 from __future__ import annotations
 
 from enum import Enum
@@ -14,7 +12,7 @@ class ConfidenceLabel(str, Enum):
 
 
 class Citation(BaseModel):
-    """A single page-level citation backing an answer."""
+ 
 
     document_id: str
     document_name: str
@@ -25,15 +23,14 @@ class Citation(BaseModel):
 
 
 class ConfidenceScore(BaseModel):
-    """Composite confidence assessment for a generated answer."""
-
+  
     score: float = Field(ge=0.0, le=1.0)
     label: ConfidenceLabel
     reason: str
 
 
 class AskResponse(BaseModel):
-    """Response body for POST /ask (non-streaming)."""
+  
 
     answer: str
     citations: list[Citation]
@@ -44,8 +41,7 @@ class AskResponse(BaseModel):
 
 
 class UploadedDocumentInfo(BaseModel):
-    """Summary information returned immediately after a successful upload."""
-
+    
     document_id: str
     filename: str
     page_count: int
@@ -55,14 +51,14 @@ class UploadedDocumentInfo(BaseModel):
 
 
 class UploadResponse(BaseModel):
-    """Response body for POST /upload."""
+    
 
     documents: list[UploadedDocumentInfo]
     message: str
 
 
 class DocumentSummary(BaseModel):
-    """A document entry as returned by GET /documents."""
+  
 
     document_id: str
     filename: str
@@ -75,21 +71,21 @@ class DocumentSummary(BaseModel):
 
 
 class DocumentListResponse(BaseModel):
-    """Response body for GET /documents."""
+   
 
     documents: list[DocumentSummary]
     total: int
 
 
 class DeleteResponse(BaseModel):
-    """Response body for DELETE /documents/{id}."""
+   
 
     document_id: str
     message: str
 
 
 class ReindexResponse(BaseModel):
-    """Response body for POST /reindex."""
+   
 
     reindexed_documents: int
     total_chunks: int
@@ -97,7 +93,6 @@ class ReindexResponse(BaseModel):
 
 
 class HealthResponse(BaseModel):
-    """Response body for GET /health."""
 
     status: str
     version: str
