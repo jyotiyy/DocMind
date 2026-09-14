@@ -1,9 +1,3 @@
-"""
-FastAPI dependency-injection accessors.
-
-Routers depend on these thin functions rather than importing service
-singletons directly, which keeps routers testable via `app.dependency_overrides`.
-"""
 
 from __future__ import annotations
 
