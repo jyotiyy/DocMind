@@ -1,4 +1,3 @@
-"""Router: GET /health -- application and dependency health check."""
 
 from __future__ import annotations
 
