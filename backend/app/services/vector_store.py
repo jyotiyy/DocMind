@@ -1,13 +1,3 @@
-"""
-Persistent FAISS vector store.
-
-Wraps a FAISS `IndexIDMap2` over a flat inner-product index so that vectors
-can be added and removed by stable integer IDs, which we derive from the
-UUID-based chunk IDs. Metadata (chunk text, page number, document, etc.) is
-stored separately as JSON, keyed by the same integer ID, since FAISS itself
-only stores vectors.
-"""
-
 from __future__ import annotations
 
 import json
@@ -30,18 +20,12 @@ _lock = threading.RLock()
 
 
 def _chunk_id_to_faiss_id(chunk_id: str) -> int:
-    """Deterministically map a UUID chunk_id string to a 63-bit integer ID.
-
-    FAISS ID maps require int64 keys; CRC32 keeps the mapping stable and
-    fast while the chance of collision is negligible at this project's
-    working scale (thousands of chunks).
-    """
+    
     return zlib.crc32(chunk_id.encode("utf-8")) & 0x7FFFFFFF
 
 
 class VectorStore:
-    """Persistent, file-backed FAISS vector store with metadata management."""
-
+    
     _instance: "VectorStore | None" = None
 
     def __init__(self) -> None:
@@ -59,9 +43,7 @@ class VectorStore:
                     cls._instance = cls()
         return cls._instance
 
-    # ------------------------------------------------------------------ #
-    # Index lifecycle
-    # ------------------------------------------------------------------ #
+   
 
     def _load_or_create_index(self) -> faiss.Index:
         if self.index_path.exists():
@@ -98,12 +80,10 @@ class VectorStore:
             self.index_path,
         )
 
-    # ------------------------------------------------------------------ #
-    # Mutations
-    # ------------------------------------------------------------------ #
+   
 
     def add_chunks(self, chunks: list[ChunkMetadata], embeddings: np.ndarray) -> None:
-        """Add a batch of chunk vectors + metadata to the index."""
+        
         if len(chunks) != embeddings.shape[0]:
             raise VectorStoreError(
                 "Number of chunks and embeddings must match "
@@ -128,7 +108,7 @@ class VectorStore:
         logger.info("Added {} chunks to vector store.", len(chunks))
 
     def delete_document(self, document_id: str) -> int:
-        """Remove all vectors/metadata belonging to a document. Returns count removed."""
+        
         with _lock:
             ids_to_remove = [
                 faiss_id
@@ -157,9 +137,7 @@ class VectorStore:
         )
         return len(ids_to_remove)
 
-    # ------------------------------------------------------------------ #
-    # Search
-    # ------------------------------------------------------------------ #
+
 
     def search(
         self,
@@ -167,22 +145,12 @@ class VectorStore:
         top_k: int,
         document_ids: list[str] | None = None,
     ) -> list[tuple[dict, float]]:
-        """Search for the top_k nearest chunks to `query_vector`.
 
-        Args:
-            query_vector: A (D,) normalized query embedding.
-            top_k: Number of results to return.
-            document_ids: Optional filter restricting results to these documents.
-
-        Returns:
-            List of (chunk_metadata_dict, similarity_score) tuples, best first.
-        """
         if self.index.ntotal == 0:
             return []
 
         with _lock:
-            # Over-fetch when filtering by document so we still have enough
-            # candidates after the post-filter step.
+           
             search_k = top_k if not document_ids else min(self.index.ntotal, top_k * 5)
             scores, ids = self.index.search(
                 query_vector.reshape(1, -1).astype(np.float32), search_k
