@@ -1,12 +1,9 @@
-"""Pydantic request models for the DocMind API."""
-
 from __future__ import annotations
 
 from pydantic import BaseModel, Field, field_validator
 
 
 class AskRequest(BaseModel):
-    """Request body for POST /ask."""
 
     question: str = Field(
         ..., min_length=3, max_length=2000, description="The user's natural-language question."
@@ -30,7 +27,6 @@ class AskRequest(BaseModel):
 
 
 class ReindexRequest(BaseModel):
-    """Request body for POST /reindex."""
 
     document_ids: list[str] | None = Field(
         default=None,
