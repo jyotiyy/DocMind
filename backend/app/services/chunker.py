@@ -1,12 +1,3 @@
-"""
-Semantic chunking service.
-
-Splits page-level text into overlapping chunks suitable for embedding,
-using a recursive character splitter that prefers to break on paragraph
-and sentence boundaries before falling back to hard character splits.
-Section headers and page numbers are preserved as chunk metadata.
-"""
-
 from __future__ import annotations
 
 import uuid
@@ -23,13 +14,7 @@ _SEPARATORS: list[str] = ["\n\n", "\n", ". ", " ", ""]
 
 
 class RecursiveCharacterTextSplitter:
-    """Splits text recursively on a hierarchy of separators.
-
-    Attempts the first separator; if any resulting piece still exceeds
-    `chunk_size`, it is recursively split using the next separator in the
-    hierarchy. Adjacent chunks overlap by `chunk_overlap` characters to
-    preserve local context across boundaries.
-    """
+   
 
     def __init__(
         self,
@@ -44,7 +29,7 @@ class RecursiveCharacterTextSplitter:
         self.separators = separators or _SEPARATORS
 
     def split_text(self, text: str) -> list[str]:
-        """Split `text` into a list of chunks respecting size/overlap rules."""
+        
         raw_pieces = self._split_recursive(text, self.separators)
         return self._merge_with_overlap(raw_pieces)
 
@@ -78,7 +63,7 @@ class RecursiveCharacterTextSplitter:
         ]
 
     def _merge_with_overlap(self, pieces: list[str]) -> list[str]:
-        """Greedily merge small pieces up to chunk_size, then apply overlap."""
+        
         merged: list[str] = []
         current = ""
 
@@ -111,18 +96,7 @@ def chunk_document(
     chunk_size: int | None = None,
     chunk_overlap: int | None = None,
 ) -> list[ChunkMetadata]:
-    """Chunk every page of a parsed document, preserving page/section metadata.
-
-    Args:
-        document_id: Owning document's UUID.
-        document_name: Original filename for citation display.
-        pages: Ordered list of PageContent extracted from the PDF.
-        chunk_size: Override the configured chunk size.
-        chunk_overlap: Override the configured chunk overlap.
-
-    Returns:
-        A flat list of ChunkMetadata across all pages, in document order.
-    """
+    
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size or settings.CHUNK_SIZE,
         chunk_overlap=chunk_overlap or settings.CHUNK_OVERLAP,
