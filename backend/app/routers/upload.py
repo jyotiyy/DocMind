@@ -1,5 +1,3 @@
-"""Router: POST /upload -- upload and ingest one or more PDF documents."""
-
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, UploadFile, status
@@ -24,7 +22,7 @@ async def upload_documents(
     files: list[UploadFile],
     manager: DocumentManager = Depends(document_manager_dependency),
 ) -> UploadResponse:
-    """Validate, save, parse, chunk, embed, and index each uploaded PDF."""
+   
     uploaded_info: list[UploadedDocumentInfo] = []
 
     for file in files:
