@@ -1,10 +1,3 @@
-"""Internal domain models describing documents, pages, and chunks.
-
-These models are persisted (as JSON) alongside the FAISS index and are
-distinct from the API-facing schemas in `response.py`, which are shaped
-for client consumption.
-"""
-
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -13,17 +6,13 @@ from pydantic import BaseModel, Field
 
 
 class PageContent(BaseModel):
-    """Extracted content for a single PDF page."""
-
-    page_number: int
+      page_number: int
     text: str
     used_ocr: bool = False
     char_count: int = 0
 
 
 class ChunkMetadata(BaseModel):
-    """Metadata associated with a single indexed text chunk."""
-
     chunk_id: str
     document_id: str
     document_name: str
@@ -35,8 +24,6 @@ class ChunkMetadata(BaseModel):
 
 
 class DocumentRecord(BaseModel):
-    """Registry entry tracking a single uploaded document and its chunks."""
-
     document_id: str
     filename: str
     file_path: str
