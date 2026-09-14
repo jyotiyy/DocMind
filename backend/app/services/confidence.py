@@ -1,10 +1,3 @@
-"""
-Confidence scoring service.
-
-Combines FAISS cosine similarity and cross-encoder rerank scores across the
-retrieved chunks into a single composite confidence score, label, and
-human-readable reason for display in the UI.
-"""
 
 from __future__ import annotations
 
@@ -19,12 +12,7 @@ _RERANK_WEIGHT = 0.6
 
 
 def compute_confidence(chunks: list[RetrievedChunk]) -> ConfidenceScore:
-    """Compute a composite confidence score from retrieved chunk scores.
-
-    The score blends mean FAISS similarity (recall signal) with mean
-    cross-encoder rerank score (precision signal), weighted toward the
-    reranker since it is the more accurate relevance estimator.
-    """
+   
     if not chunks:
         return ConfidenceScore(
             score=0.0,
