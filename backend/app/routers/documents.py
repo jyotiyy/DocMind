@@ -1,4 +1,4 @@
-"""Router: GET/DELETE /documents, POST /reindex -- manage indexed documents."""
+
 
 from __future__ import annotations
 
