@@ -1,11 +1,4 @@
-"""
-Cross-encoder reranking service.
 
-FAISS retrieval (bi-encoder) is fast but approximate; a cross-encoder that
-jointly attends over (query, passage) pairs gives a much more accurate
-relevance ranking. We use it to rerank the top-K FAISS candidates down to a
-smaller, higher-precision set before answer generation.
-"""
 
 from __future__ import annotations
 
@@ -24,7 +17,6 @@ _lock = threading.Lock()
 
 
 class RerankerModel:
-    """Thread-safe singleton wrapper around a CrossEncoder model."""
 
     _instance: "RerankerModel | None" = None
 
@@ -73,18 +65,7 @@ def _sigmoid(x: float) -> float:
 def rerank(
     query: str, candidates: list[tuple[dict, float]], top_k: int
 ) -> list[tuple[dict, float, float]]:
-    """Rerank FAISS candidates using the cross-encoder.
-
-    Args:
-        query: The user's question.
-        candidates: List of (chunk_metadata, faiss_similarity) tuples.
-        top_k: Number of top reranked results to keep.
-
-    Returns:
-        List of (chunk_metadata, faiss_similarity, rerank_score) tuples,
-        sorted by rerank_score descending, where rerank_score is a
-        sigmoid-normalized value in [0, 1].
-    """
+    
     if not candidates:
         return []
 
