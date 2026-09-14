@@ -1,10 +1,3 @@
-"""
-Retrieval pipeline.
-
-Orchestrates: question -> query embedding -> FAISS top-K -> cross-encoder
-rerank -> top-N context assembly. This is the single entry point the `ask`
-router uses to fetch grounding context for the LLM.
-"""
 
 from __future__ import annotations
 
@@ -23,7 +16,7 @@ settings = get_settings()
 
 @dataclass
 class RetrievedChunk:
-    """A single chunk retrieved and scored for a query."""
+   
 
     chunk_id: str
     document_id: str
@@ -41,20 +34,7 @@ def retrieve(
     retrieval_top_k: int | None = None,
     rerank_top_k: int | None = None,
 ) -> list[RetrievedChunk]:
-    """Run the full retrieval pipeline for a natural-language question.
-
-    Args:
-        question: The user's question.
-        document_ids: Optional subset of document IDs to restrict search to.
-        retrieval_top_k: Override for the initial FAISS candidate count.
-        rerank_top_k: Override for the final reranked result count.
-
-    Returns:
-        A list of RetrievedChunk, best-first, of length <= rerank_top_k.
-
-    Raises:
-        EmptyIndexError: if the vector store has no indexed content.
-    """
+   
     store = get_vector_store()
     if store.total_vectors() == 0:
         raise EmptyIndexError(
@@ -93,7 +73,7 @@ def retrieve(
 
 
 def build_context(chunks: list[RetrievedChunk]) -> str:
-    """Assemble retrieved chunks into a single formatted context block for the LLM."""
+   
     blocks = []
     for i, chunk in enumerate(chunks, start=1):
         header = f"[Source {i} | Document: {chunk.document_name} | Page: {chunk.page_number}"
