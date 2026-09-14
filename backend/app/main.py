@@ -1,11 +1,3 @@
-"""
-DocMind backend application entrypoint.
-
-Wires together configuration, logging, exception handling, CORS, and all
-API routers. Run with:
-
-    uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-"""
 
 from __future__ import annotations
 
